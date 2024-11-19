@@ -1,0 +1,36 @@
+menu "Sharp 430 Configuration"
+
+    config SHARP430_UNIT
+        int "ADC unit to connect the Sharp430"
+        default 1
+        help
+            Select the default unit and channel with adeccuate values
+            there are no checks to safeguard propper GPIO management.
+
+    config SHARP430_CHAN
+        int "ADC channel to connect the Sharp430"
+        default 4
+        help
+            Select the default unit and channel with adeccuate values
+            there are no checks to safeguard propper GPIO management.
+
+    config SHARP430_BITWIDTH
+        int "ADC channel bitwidth precision for the Sharp430 channel"
+        default 12
+        help
+            Configure the granularity of the measure removing significant
+            bits if unnecesary.
+
+    config SHARP430_ATTEN
+        int "ADC channel attenuation for the Sharp430 channel"
+        default 3
+        help
+            Configure the attenuation of the measurement, it can be lowered given distances will be great at a cost at it reaching a peak.
+
+    config SHARP430_NUM_AVERAGES
+        int "Times a measurement is taken before an average is given"
+        default 10
+        help
+            To smooth distance measuring we take an average.
+
+endmenu

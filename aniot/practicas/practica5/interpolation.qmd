@@ -1,0 +1,36 @@
+```{python}
+import findspark
+import math
+import plotly.express as px
+import numpy as np
+from pyspark.sql.types import FloatType, StructField, StructType
+from pyspark.sql.session import SparkSession
+from pyspark.ml.regression import LinearRegression
+from pyspark.ml.evaluation import RegressionEvaluator
+import pyspark.sql.functions as F
+from functools import reduce
+
+spark = SparkSession.builder.getOrCreate()
+schema = StructType([StructField("d", FloatType(), True),
+                     StructField("V", FloatType(), True)])
+df = spark.read.csv("./distance-measures.csv", schema=schema)
+max = df.agg(F.max("V")).collect()[0]["max(V)"]
+max_dist_near = df.filter(df["V"] == max).collect()[0]["d"]
+df_far = df.filter(df["d"] >= max_dist_near)
+df_far= df_far.withColumn("invV", 1 / (df_far["V"]))
+
+df_near = df.filter(df["d"] <= max_dist_near)
+v_near = df_near.select("V").toPandas().values.reshape(-1) 
+d_near = df_near.select("d").toPandas().values.reshape(-1) 
+fit_near = np.polynomial.Polynomial.fit(v_near, d_near, deg=2)
+df_near = df_near.withColumn("fit", fit_near(df_near["V"]))
+fit_far = np.polynomial.Polynomial.fit(df_far.select("invV").toPandas().values.reshape(-1) ,df_far.select("d").toPandas().values.reshape(-1), deg=3)
+df_far = df_far.withColumn("fit", fit_far(df_far["invV"]))
+fig = px.line(df_near, x="V", y =["d", "fit"] )
+fig.show()
+
+fig = px.line(df_far, x="invV", y =["d", "fit"] )
+fig.show()
+print(f"Near: f(v) = {fit_near}\nFar: f(1/v) = {fit_far}")
+
+```
