@@ -41,6 +41,7 @@ Para corregir este comportamiento añadimos la siguiente linea de código
 ```c
 ESP_ERROR_CHECK(rtc_gpio_hold_en(GPIO_WAKEUP_NUM));
 ```
+Investigando sobre como conseguir mantener el estado del digital gpio llegamos a este [post](https://electronics.stackexchange.com/questions/350158/esp32-how-to-keep-a-pin-high-during-deep-sleep-rtc-gpio-pull-ups-are-too-weak) el cual nos señala tambien que deberíamos usar `gpio_deep_sleep_hold_en`, sin embargo en nuestro ejemplo no fué necesario.
 # Tareas
 
 Completar la aplicación de la [practica 3](./../practica3/final/README.md) de modo que:
@@ -51,3 +52,4 @@ Compruebe el motivo por el que se produce cada reinicio y lo anote en NVS.
 Escriba en NVS la última medida del sensor tomada.
 
 [TODO]
+
