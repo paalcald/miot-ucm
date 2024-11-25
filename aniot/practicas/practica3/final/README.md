@@ -1,7 +1,7 @@
 ---
 title: Práctica 3. Programación con tareas y eventos en ESP-IDF
 author: Pablo C. Alcalde
-...
+---
 # Funcionamiento
 
 ## Finite State Machine
