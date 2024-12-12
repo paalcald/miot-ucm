@@ -126,9 +126,36 @@ static void state_event_handler(void * handler_args, esp_event_base_t base,
              * automatically, if it doesn't that logic needs to get added */
             wifi_disconnect();
             temp_mock_pause();
+
+            //Welcome message to console mode. It will describe what options are available for this mode
+
+            ESP_LOGI("Welcome to Console mode.", "Please use help command for further infortmation.");
+
+            switch(){
+                case HELP:
+                    ESP_LOGI("Three commands are available for this mode: ", "help, monitor, quota");
+                    ESP_LOGI("help command: ", "It will show you the available commands");
+                    ESP_LOGI("monitor command: ","It will exit from console mode and come back to monitoring mode.");
+                    ESP_LOGI("quota command: ", "It will show how many bytes is pending of being reading in the Flash memory.");
+            
+                break;
+                case MONITOR:
+
+
+                break;
+
+                case QUOTA: 
+                // remaining flash memory content is got and showed to the operator
+                remaining_buffer = getDataLeft();
+
+                ESP_LOGI("the remaining dat to read from flash memory is:%u", remaining_buffer);
+                
+                break;
+            }
+           
             /* TODO! implement console logic */
             break;
-    }
+    
 }
 
 void app_main(void)
