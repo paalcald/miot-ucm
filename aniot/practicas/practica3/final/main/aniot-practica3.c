@@ -11,9 +11,12 @@
 #include "mock_temp.h"
 #include "esp_event.h"
 #include "fsm_events.h"
+#include "driver/gpio.h"
+#include "esp_pm.h"
 /* TODO implement a component to describe STATE_EVENTs */
 /* #include "state_event.h" */
 
+#define GPIO_STATE_SEND 0
 #define MAX_FLASH_CAPACITY 1024
 
 static char *TAG = "MAIN APP";
@@ -133,6 +136,22 @@ static void state_event_handler(void * handler_args, esp_event_base_t base,
 
 void app_main(void)
 {
+//    gpio_config_t config = {
+//            .pin_bit_mask = BIT64(GPIO_STATE_SEND),
+//            .mode = GPIO_MODE_INPUT,
+//            .pull_down_en = false,
+//            .pull_up_en = false,
+//            .intr_type = GPIO_INTR_DISABLE
+//    };
+//    ESP_ERROR_CHECK(gpio_config(&config));
+
+    esp_pm_config_t power_management_cfg = {
+        .max_freq_mhz = 80,
+        .min_freq_mhz = 40,
+        .light_sleep_enable = true,
+    };
+    ESP_ERROR_CHECK(esp_pm_configure(&power_management_cfg));
+
     ESP_ERROR_CHECK(mock_flash_init(MAX_FLASH_CAPACITY));
 
     esp_event_loop_args_t monitorization_event_loop_args = {
